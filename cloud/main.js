@@ -1,5 +1,4 @@
-// var twilio = require("twilio");
-// twilio.initialize("87se46bovanw4v5aiwy4o57","ia8o57awyov57yn875vyboe");
+var twilio = require('twilio')('87se46bovanw4v5aiwy4o57', 'ia8o57awyov57yn875vyboe');
 
 
 Parse.Cloud.define('createToken', function(req, res) {
@@ -53,7 +52,7 @@ Parse.Cloud.define("sendCode", function(req, res) {
             });
         }
     }, function (err) {
-        res.error(err);
+        console.log(err);
     });
 });
 
@@ -80,9 +79,6 @@ function sendCodeSms(phoneNumber, code, language) {
  }
 
  var promise = new Parse.Promise();
-//  var twilio = require("twilio");
-var twilio = require('twilio')('87se46bovanw4v5aiwy4o57', 'ia8o57awyov57yn875vyboe');
-//  twilio.initialize("87se46bovanw4v5aiwy4o57","ia8o57awyov57yn875vyboe");
  twilio.sendSms({
      to: prefix + phoneNumber.replace(/\D/g, ''),
      from: twilioPhoneNumber.replace(/\D/g, ''),
