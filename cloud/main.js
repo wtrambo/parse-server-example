@@ -1,5 +1,18 @@
-// var twilio = require('twilio')('87se46bovanw4v5aiwy4o57', 'ia8o57awyov57yn875vyboe');
+var twilio = require('twilio')('87se46bovanw4v5aiwy4o57', 'ia8o57awyov57yn875vyboe');
 
+
+Parse.Cloud.define('createToken', function(req, res) {
+  var token = new AccessToken(accountSid, apiKeySid, apiKeySecret);
+  var endpointId = 'Benji' + req.params.phoneNumber + req.params.deviceID;
+  var ipmGrant = new IpMessagingGrant({
+    serviceSid: serviceSid,
+    endpointId: endpointId
+    });
+  token.addGrant(ipmGrant);
+  token.identity = req.params.phoneNumber;
+  console.log(token.toJwt());
+  res.success(token.toJwt())
+});
 // Create the Cloud Function
 
 Parse.Cloud.define("sendCode", function(req, res) {
@@ -39,7 +52,7 @@ Parse.Cloud.define("sendCode", function(req, res) {
             });
         }
     }, function (err) {
-        console.log(err);
+        res.error(err);
     });
 });
 
