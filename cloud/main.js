@@ -1,5 +1,5 @@
-var twilio = require("twilio");
-twilio.initialize("87se46bovanw4v5aiwy4o57","ia8o57awyov57yn875vyboe");
+// var twilio = require("twilio");
+// twilio.initialize("87se46bovanw4v5aiwy4o57","ia8o57awyov57yn875vyboe");
 
 
 Parse.Cloud.define('createToken', function(req, res) {
@@ -56,44 +56,47 @@ Parse.Cloud.define("sendCode", function(req, res) {
         res.error(err);
     });
 });
-//
-// Parse.Cloud.define("login", function(req, res) {
-//
-//  var phoneNumber = req.params.phoneNumber;
-//  phoneNumber = phoneNumber.replace(/\D/g, '');
-//
-//  if (phoneNumber && req.params.codeEntry) {
-//      Parse.User.logIn(phoneNumber, secretPasswordToken + req.params.codeEntry).then(function (user) {
-//          res.success(user._sessionToken);
-//      }, function (err) {
-//          res.error(err);
-//      });
-//  } else {
-//      res.error('Invalid parameters.');
-//  }
-// });
-//
-// function sendCodeSms(phoneNumber, code, language) {
-//  var prefix = "+1";
-//  if(typeof language !== undefined && language == "ja") {
-//      prefix = "+81";
-//  }
-//
-//  var promise = new Parse.Promise();
-//  twilio.sendSms({
-//      to: prefix + phoneNumber.replace(/\D/g, ''),
-//      from: twilioPhoneNumber.replace(/\D/g, ''),
-//      body: 'Your login code for Benji is ' + code
-//  }, function(err, responseData) {
-//      if (err) {
-//          console.log(err);
-//          promise.reject(err.message);
-//      } else {
-//          promise.resolve();
-//      }
-//  });
-//  return promise;
-// }
+
+Parse.Cloud.define("login", function(req, res) {
+
+ var phoneNumber = req.params.phoneNumber;
+ phoneNumber = phoneNumber.replace(/\D/g, '');
+
+ if (phoneNumber && req.params.codeEntry) {
+     Parse.User.logIn(phoneNumber, secretPasswordToken + req.params.codeEntry).then(function (user) {
+         res.success(user._sessionToken);
+     }, function (err) {
+         res.error(err);
+     });
+ } else {
+     res.error('Invalid parameters.');
+ }
+});
+
+function sendCodeSms(phoneNumber, code, language) {
+ var prefix = "+1";
+ if(typeof language !== undefined && language == "ja") {
+     prefix = "+81";
+ }
+
+ var promise = new Parse.Promise();
+//  var twilio = require("twilio");
+var twilio = require('twilio')('87se46bovanw4v5aiwy4o57', 'ia8o57awyov57yn875vyboe');
+//  twilio.initialize("87se46bovanw4v5aiwy4o57","ia8o57awyov57yn875vyboe");
+ twilio.sendSms({
+     to: prefix + phoneNumber.replace(/\D/g, ''),
+     from: twilioPhoneNumber.replace(/\D/g, ''),
+     body: 'Your login code for Benji is ' + code
+ }, function(err, responseData) {
+     if (err) {
+         console.log(err);
+         promise.reject(err.message);
+     } else {
+         promise.resolve();
+     }
+ });
+ return promise;
+}
 
 
 
