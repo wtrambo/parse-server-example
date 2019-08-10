@@ -52,7 +52,8 @@ Parse.Cloud.define("sendCode", function(req, res) {
             });
         }
     }, function (err) {
-        res.error(err);
+      console.log(err)
+        // res.error(err);
     });
 });
 
