@@ -53,6 +53,7 @@ Parse.Cloud.define("findUser", function(request, response) {
   var phoneNumber = request.params.phoneNumber;
     phoneNumber = phoneNumber.replace(/\D/g, '');
   var userQuery = new Parse.Query(Parse.User);
+  userQuery.useMasterKey(true);
   userQuery.equalTo("objectId","fZpDmQQEVt")
   userQuery.find().then( function(result) { 
       console.log("Inside then with result: " + result.length);
