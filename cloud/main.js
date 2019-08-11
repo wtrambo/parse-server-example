@@ -17,7 +17,58 @@ Parse.Cloud.define('createToken', function(req, res) {
 });
 // Create the Cloud Function
 
+
 Parse.Cloud.define("findUser", function(request, response) {
+  var phoneNumber = request.params.phoneNumber;
+    phoneNumber = phoneNumber.replace(/\D/g, '');
+  var userQuery = new Parse.Query(Parse.User);
+  userQuery.get( phoneNumber ).then( function(result) { 
+      foundUser = result; 
+      if(foundUser.length != 0){
+        console.log("Found a user, user is: " + foundUser)
+        response.success("Found the user!")
+      } else {
+        console.log("did not find a foundUser")
+        response.error("did not find the user")
+      }
+      
+      return foundUser
+  })
+  
+//   .then( function( results ) {
+//       if( results.length == 0 ) { 
+//           var userCoin = request.user.get("coin");
+//           var priceCoin = purchaseDeck.get("priceCoin");
+//           if( userCoin >= priceCoin ) {
+//               console.log("/purchase made/" + userCoin + " - " + priceCoin + " = " + userCoin - priceCoin);
+//               request.user.set("coin", userCoin - priceCoin);
+//               return request.user.save();
+//           }
+//           else {
+//               return Parse.Promise.error("not enough coins");
+//           }
+//       }
+//       else {
+//           return Parse.Promise.error("already has deck");
+//       }
+//   }).then( function(result) {
+//       var newUserDeckObject = new Parse.Object("User_Deck");
+//       newUserDeckObject.set("userId", request.user);
+//       newUserDeckObject.set("deckId", purchaseDeck);
+//       console.log("/purchase deck added");
+//       return newUserDeckObject.save();
+//   }).then( function(result) {
+//       var returns = {};
+//       returns["userCoins"] = request.user.get("coin");
+//       returns["purchasedDeck"] = purchaseDeck.get("nickname");
+//       response.success(returns);
+//       console.log(request.user.username + "/purchase deck succeeded--/");
+//   }, function(error) {
+//       response.error(error);
+//   });
+// });
+
+Parse.Cloud.define("findUser2", function(request, response) {
   
   var phoneNumber = request.params.phoneNumber;
     phoneNumber = phoneNumber.replace(/\D/g, '');
@@ -43,7 +94,7 @@ Parse.Cloud.define("findUser", function(request, response) {
   });
 });
 
-Parse.Cloud.define('findUser2', function(request, response) {
+Parse.Cloud.define('findUser3', function(request, response) {
 
   var phoneNumber = request.params.phoneNumber;
     phoneNumber = phoneNumber.replace(/\D/g, '');
