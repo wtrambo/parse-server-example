@@ -18,23 +18,53 @@ Parse.Cloud.define('createToken', function(req, res) {
 // Create the Cloud Function
 
 
-Parse.Cloud.define("findUser", function(request, response) {
-  var phoneNumber = request.params.phoneNumber;
-    phoneNumber = phoneNumber.replace(/\D/g, '');
-  var userQuery = new Parse.Query(Parse.User);
-  userQuery.get( phoneNumber ).then( function(result) { 
-      foundUser = result; 
-      if(foundUser.length != 0){
-        console.log("Found a user, user is: " + foundUser)
-        response.success("Found the user!")
-      } else {
-        console.log("did not find a foundUser")
-        response.error("did not find the user")
-      }
+// Parse.Cloud.define("findUser", function(request, response) {
+// // function makeNewNode(geoPoint, callback) {
+  
+//   var phoneNumber = request.params.phoneNumber;
+//   phoneNumber = phoneNumber.replace(/\D/g, '');
+
+//   var query = new Parse.Query(Parse.User);
+//   query.equalTo("username", phoneNumber);
+//   query.first({
+//     success: function(results) {
+//       console.log(results);
+//       console.log(results + " -- found this!");
+//       if (results == undefined) {
+//         node.set("location", geoPoint);
+//         node.set("stop", null);
+//         node.save(function() {
+//           console.log(node.id);
+//           callback(null, node);
+//         });
+//       } else {
+//         callback(null, results);
+//       }
+//     },
+//     error: function(error) {
+//       console.log("Failed to create a node. Error: " + error.message + ".");
+//       callback(error);
+//     }
+//   });
+// })
+
+// Parse.Cloud.define("findUser", function(request, response) {
+//   var phoneNumber = request.params.phoneNumber;
+//     phoneNumber = phoneNumber.replace(/\D/g, '');
+//   var userQuery = new Parse.Query(Parse.User);
+//   userQuery.get( phoneNumber ).then( function(result) { 
+//       foundUser = result; 
+//       if(foundUser.length != 0){
+//         console.log("Found a user, user is: " + foundUser)
+//         response.success("Found the user!")
+//       } else {
+//         console.log("did not find a foundUser")
+//         response.error("did not find the user")
+//       }
       
-      return foundUser
-  })
-});
+//       return foundUser
+//   })
+// });
   
 //   .then( function( results ) {
 //       if( results.length == 0 ) { 
@@ -131,6 +161,7 @@ Parse.Cloud.define("sendCode", function(req, res) {
   var query = new Parse.Query(Parse.User);
   // query.equalTo("username", phoneNumber);
   query.equalTo("objectId", "fZpDmQQEVt")
+  query.useMasterKey = true;
   console.log("username we're looking for: " + phoneNumber);
   console.log("Is parsing strings working? " + ("2062806700" == phoneNumber));
   query.find().then(function(resultArray) {
