@@ -28,7 +28,7 @@ Parse.Cloud.define("sendCode", function(req, res) {
     var query = new Parse.Query(Parse.User);
     query.equalTo("username", "" + phoneNumber);
     console.log("username we're looking for: " + phoneNumber)
-    console.log("Is parsing strings working? " + ("2062806700" == phonenumber))
+    console.log("Is parsing strings working? " + ("2062806700" == phoneNumber))
     query.first().then(function(result) {
         console.log("In first with result: " + result)
         var min = 1000; var max = 9999;
