@@ -34,6 +34,7 @@ Parse.Cloud.define("findUser", function(request, response) {
       
       return foundUser
   })
+});
   
 //   .then( function( results ) {
 //       if( results.length == 0 ) { 
