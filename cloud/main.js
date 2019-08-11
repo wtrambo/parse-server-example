@@ -26,8 +26,10 @@ Parse.Cloud.define("sendCode", function(req, res) {
     }
     if (!phoneNumber || (phoneNumber.length != 10 && phoneNumber.length != 11)) return res.error('Invalid Parameters');
     var query = new Parse.Query(Parse.User);
-    query.equalTo('username', phoneNumber + "");
+    query.equalTo('username', phoneNumber);
+    console.log("username we're looking for: " + phoneNumber + "")
     query.first().then(function(result) {
+      console.log("Found the user")
         var min = 1000; var max = 9999;
         var num = Math.floor(Math.random() * (max - min + 1)) + min;
         if (result) {
@@ -41,6 +43,7 @@ Parse.Cloud.define("sendCode", function(req, res) {
                 res.error(err);
             });
         } else {
+          console.log("creating new user")
             var user = new Parse.User();
             user.setUsername(phoneNumber);
             user.setPassword(secretPasswordToken + num);
