@@ -25,8 +25,8 @@ Parse.Cloud.define("sendCode", function(req, res) {
         language = lang;
     }
     if (!phoneNumber || (phoneNumber.length != 10 && phoneNumber.length != 11)) return res.error('Invalid Parameters');
-    var query = new Parse.Query(Parse.User);
-    query.equalTo('username', phoneNumber);
+    var query = new Parse.Query(User);
+    query.equalTo("username", phoneNumber);
     console.log("username we're looking for: " + phoneNumber + "")
     query.first().then(function(result) {
         console.log("In first with result: " + result)
