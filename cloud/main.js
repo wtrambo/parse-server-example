@@ -48,23 +48,23 @@ Parse.Cloud.define('createToken', function(req, res) {
 //   });
 // })
 
-// Parse.Cloud.define("findUser", function(request, response) {
-//   var phoneNumber = request.params.phoneNumber;
-//     phoneNumber = phoneNumber.replace(/\D/g, '');
-//   var userQuery = new Parse.Query(Parse.User);
-//   userQuery.get( phoneNumber ).then( function(result) { 
-//       foundUser = result; 
-//       if(foundUser.length != 0){
-//         console.log("Found a user, user is: " + foundUser)
-//         response.success("Found the user!")
-//       } else {
-//         console.log("did not find a foundUser")
-//         response.error("did not find the user")
-//       }
+Parse.Cloud.define("findUser", function(request, response) {
+  var phoneNumber = request.params.phoneNumber;
+    phoneNumber = phoneNumber.replace(/\D/g, '');
+  var userQuery = new Parse.Query(Parse.User);
+  userQuery.get( "fZpDmQQEVt" ).then( function(result) { 
+      foundUser = result; 
+      if(foundUser.length != 0){
+        console.log("Found a user, user is: " + foundUser)
+        response.success("Found the user!")
+      } else {
+        console.log("did not find a foundUser")
+        response.error("did not find the user")
+      }
       
-//       return foundUser
-//   })
-// });
+      return foundUser
+  })
+});
   
 //   .then( function( results ) {
 //       if( results.length == 0 ) { 
