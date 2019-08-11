@@ -19,7 +19,7 @@ Parse.Cloud.define('createToken', function(req, res) {
 
 Parse.Cloud.define('findUser', function(request, response) {
 
-  var phoneNumber = req.params.phoneNumber;
+  var phoneNumber = request.params.phoneNumber;
     phoneNumber = phoneNumber.replace(/\D/g, '');
 
   // var user = new Parse.User();
