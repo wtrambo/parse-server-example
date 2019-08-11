@@ -28,10 +28,16 @@ Parse.Cloud.define("sendCode", function(req, res) {
     
     var query = new Parse.Query(Parse.User);
     query.equalTo("username", phoneNumber);
-    console.log("username we're looking for: " + phoneNumber)
-    console.log("Is parsing strings working? " + ("2062806700" == phoneNumber))
+    console.log("username we're looking for: " + phoneNumber);
+    console.log("Is parsing strings working? " + ("2062806700" == phoneNumber));
     query.find().then(function(resultArray) {
-      console.log("In find with results: " + resultArray)
+      
+      if(resultArray.length == 0){
+        console.log("no results found with find()");
+      } else {
+        console.log("we found results with find()!");
+        console.log(resultArray)
+      }
     })
 
     query.first().then(function(result) {
