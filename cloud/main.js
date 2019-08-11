@@ -49,22 +49,23 @@ Parse.Cloud.define('createToken', function(req, res) {
 // })
 
 Parse.Cloud.define("findUser", function(request, response) {
+  console.log("starting")
   var phoneNumber = request.params.phoneNumber;
     phoneNumber = phoneNumber.replace(/\D/g, '');
   var userQuery = new Parse.Query(Parse.User);
   userQuery.equalTo("objectId","fZpDmQQEVt")
   userQuery.find().then( function(result) { 
+      console.log("Inside then with result: " + result);
       foundUser = result; 
       if(foundUser.length != 0){
         console.log("Found a user, user is: " + foundUser)
-        response.success("Found the user!")
       } else {
         console.log("did not find a foundUser")
-        response.error("did not find the user")
       }
       
       return foundUser
   })
+  console.log("exiting")
 });
   
 //   .then( function( results ) {
