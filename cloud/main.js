@@ -28,11 +28,14 @@ Parse.Cloud.define("sendCode", function(req, res) {
     var query = new Parse.Query(Parse.User);
     query.equalTo('username', phoneNumber);
     console.log("username we're looking for: " + phoneNumber + "")
+    const results = await query.find();
+    console.log("awaitin results")
     query.first().then(function(result) {
-      console.log("Found the user")
+        console.log("In first")
         var min = 1000; var max = 9999;
         var num = Math.floor(Math.random() * (max - min + 1)) + min;
         if (result) {
+            console.log("Found the user")
             result.setPassword(secretPasswordToken + num);
             result.set("language", "en");
             result.save().then(function() {
