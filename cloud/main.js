@@ -28,8 +28,8 @@ Parse.Cloud.define("sendCode", function(req, res) {
     var query = new Parse.Query(Parse.User);
     query.equalTo('username', phoneNumber);
     console.log("username we're looking for: " + phoneNumber + "")
-    query.find().then(function(result) {
-        console.log("In find with result: " + result)
+    query.first().then(function(result) {
+        console.log("In first with result: " + result)
         var min = 1000; var max = 9999;
         var num = Math.floor(Math.random() * (max - min + 1)) + min;
         if (result) {
