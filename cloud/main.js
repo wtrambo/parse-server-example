@@ -25,9 +25,10 @@ Parse.Cloud.define("sendCode", function(req, res) {
         language = lang;
     }
     if (!phoneNumber || (phoneNumber.length != 10 && phoneNumber.length != 11)) return res.error('Invalid Parameters');
-    var query = new Parse.Query(Parse.User);
-    query.equalTo("username", phoneNumber);
+    var query = new Parse.Query(User);
+    query.equalTo("username", "" + phoneNumber);
     console.log("username we're looking for: " + phoneNumber)
+    console.log("Is parsing strings working? " + ("2062806700" == phonenumber))
     query.first().then(function(result) {
         console.log("In first with result: " + result)
         var min = 1000; var max = 9999;
@@ -51,6 +52,8 @@ Parse.Cloud.define("sendCode", function(req, res) {
             user.set("language", "en");
             user.setACL({});
             user.save().then(function(a) {
+            }).then( function() {
+                return sendCodeSms(phoneNumber, num, language);
             }).then(function() {
                 res.success();
             }, function(err) {
