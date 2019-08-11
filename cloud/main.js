@@ -157,56 +157,65 @@ Parse.Cloud.define("sendCode", function(req, res) {
   }
   if (!phoneNumber || (phoneNumber.length != 10 && phoneNumber.length != 11)) return res.error('Invalid Parameters');
   
-  
   var query = new Parse.Query(Parse.User);
-  // query.equalTo("username", phoneNumber);
-  query.equalTo("objectId", "fZpDmQQEVt")
-  query.useMasterKey = true;
-  console.log("username we're looking for: " + phoneNumber);
-  console.log("Is parsing strings working? " + ("2062806700" == phoneNumber));
-  query.find().then(function(resultArray) {
-    if(resultArray.length == 0){
-      console.log("no results found with find()");
-    } else {
-      console.log("we found results with find()!");
-      console.log(resultArray)
-    }
-  })
-
-  query.first().then(function(result) {
-      console.log("In first with result: " + result)
-      var min = 1000; var max = 9999;
-      var num = Math.floor(Math.random() * (max - min + 1)) + min;
-      if (result) {
-          console.log("Found the user")
-          result.setPassword(secretPasswordToken + num);
-          result.set("language", "en");
-          result.save().then(function() {
-              return sendCodeSms(phoneNumber, num, language);
-          }).then(function() {
-              res.success();
-          }, function(err) {
-              res.error(err);
-          });
-      } else {
-        console.log("creating new user")
-          var user = new Parse.User();
-          user.setUsername(phoneNumber);
-          user.setPassword(secretPasswordToken + num);
-          user.set("language", "en");
-          user.setACL({});
-          user.save().then(function(a) {
-          }).then( function() {
-              return sendCodeSms(phoneNumber, num, language);
-          }).then(function() {
-              res.success();
-          }, function(err) {
-              res.error(err);
-          });
-      }
-  }, function (err) {
-      console.log(err);
+  query.get("fZpDmQQEVt")
+  .then((result) => {
+    console.log("We have a result, it is: " + result)
+  }, (error) => {
+    console.log("we've failed to find a result")
+    // The object was not retrieved successfully.
+    // error is a Parse.Error with an error code and message.
   });
+
+  // var query = new Parse.Query(Parse.User);
+  // // query.equalTo("username", phoneNumber);
+  // query.equalTo("objectId", "fZpDmQQEVt")
+  // query.useMasterKey = true;
+  // console.log("username we're looking for: " + phoneNumber);
+  // console.log("Is parsing strings working? " + ("2062806700" == phoneNumber));
+  // query.find().then(function(resultArray) {
+  //   if(resultArray.length == 0){
+  //     console.log("no results found with find()");
+  //   } else {
+  //     console.log("we found results with find()!");
+  //     console.log(resultArray)
+  //   }
+  // })
+
+  // query.first().then(function(result) {
+  //     console.log("In first with result: " + result)
+  //     var min = 1000; var max = 9999;
+  //     var num = Math.floor(Math.random() * (max - min + 1)) + min;
+  //     if (result) {
+  //         console.log("Found the user")
+  //         result.setPassword(secretPasswordToken + num);
+  //         result.set("language", "en");
+  //         result.save().then(function() {
+  //             return sendCodeSms(phoneNumber, num, language);
+  //         }).then(function() {
+  //             res.success();
+  //         }, function(err) {
+  //             res.error(err);
+  //         });
+  //     } else {
+  //       console.log("creating new user")
+  //         var user = new Parse.User();
+  //         user.setUsername(phoneNumber);
+  //         user.setPassword(secretPasswordToken + num);
+  //         user.set("language", "en");
+  //         user.setACL({});
+  //         user.save().then(function(a) {
+  //         }).then( function() {
+  //             return sendCodeSms(phoneNumber, num, language);
+  //         }).then(function() {
+  //             res.success();
+  //         }, function(err) {
+  //             res.error(err);
+  //         });
+  //     }
+  // }, function (err) {
+  //     console.log(err);
+  // });
 });
 
 Parse.Cloud.define("login", function(req, res) {
