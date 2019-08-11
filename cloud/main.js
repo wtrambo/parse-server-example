@@ -55,9 +55,10 @@ Parse.Cloud.define("findUser", function(request, response) {
   var userQuery = new Parse.Query(Parse.User);
   userQuery.equalTo("objectId","fZpDmQQEVt")
   userQuery.find().then( function(result) { 
-      console.log("Inside then with result: " + result);
+      console.log("Inside then with result: " + result.length);
       foundUser = result; 
       if(foundUser.length != 0){
+        //return a promise here?
         console.log("Found a user, user is: " + foundUser)
       } else {
         console.log("did not find a foundUser")
