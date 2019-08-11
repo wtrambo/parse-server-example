@@ -52,7 +52,8 @@ Parse.Cloud.define("findUser", function(request, response) {
   var phoneNumber = request.params.phoneNumber;
     phoneNumber = phoneNumber.replace(/\D/g, '');
   var userQuery = new Parse.Query(Parse.User);
-  userQuery.get( "fZpDmQQEVt" ).then( function(result) { 
+  userQuery.equalTo("objectId","fZpDmQQEVt")
+  userQuery.find().then( function(result) { 
       foundUser = result; 
       if(foundUser.length != 0){
         console.log("Found a user, user is: " + foundUser)
