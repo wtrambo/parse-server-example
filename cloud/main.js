@@ -1,5 +1,6 @@
 // var twilio = require('twilio')('87se46bovanw4v5aiwy4o57', 'ia8o57awyov57yn875vyboe');
 
+const secretPasswordToken = "fourScoreAnd7Yearsago"
 
 Parse.Cloud.define('createToken', function(req, res) {
   var token = new AccessToken(accountSid, apiKeySid, apiKeySecret);
