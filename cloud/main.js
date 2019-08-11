@@ -17,6 +17,29 @@ Parse.Cloud.define('createToken', function(req, res) {
 });
 // Create the Cloud Function
 
+Parse.Cloud.define('findUser', function(request, response) {
+
+  var phoneNumber = req.params.phoneNumber;
+    phoneNumber = phoneNumber.replace(/\D/g, '');
+
+  // var user = new Parse.User();
+  var query = new Parse.Query(Parse.User);
+  query.equalTo("username", phoneNumber);
+  query.first({
+    success: function(object) {
+      console.log("Success!")
+      // Set the job's success status
+      response.success("Success Message");
+    },
+    error: function(error) {
+      console.log("Still didn't find it")
+      // Set the job's error status
+      response.error(phoneNumber );
+    }
+  });
+
+});
+
 Parse.Cloud.define("sendCode", function(req, res) {
     var phoneNumber = req.params.phoneNumber;
     phoneNumber = phoneNumber.replace(/\D/g, '');
@@ -26,13 +49,17 @@ Parse.Cloud.define("sendCode", function(req, res) {
     }
     if (!phoneNumber || (phoneNumber.length != 10 && phoneNumber.length != 11)) return res.error('Invalid Parameters');
     
+    
+
+
+
+
     var query = new Parse.Query(Parse.User);
     // query.equalTo("username", phoneNumber);
     query.equalTo("objectId", "fZpDmQQEVt")
     console.log("username we're looking for: " + phoneNumber);
     console.log("Is parsing strings working? " + ("2062806700" == phoneNumber));
     query.find().then(function(resultArray) {
-      
       if(resultArray.length == 0){
         console.log("no results found with find()");
       } else {
