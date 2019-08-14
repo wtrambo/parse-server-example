@@ -26,15 +26,18 @@ Parse.Cloud.define("findUser", async request => {
 
 Parse.Cloud.define("findUser2", async request => {
   const userQuery = new Parse.Query(Parse.User);
-  userQuery.equalTo('username', '2062806700');
-  const foundUser = await userQuery.first();
-  if(foundUser) {
-    console.log("Found a user, user is: " + foundUser);
-    return foundUser;
+  userQuery.equalTo('username', '5555551212');
+  const user = await userQuery.first();
+  if(user) {
+    console.log("Found a user, user is: " + user);
   } else {
-    console.log("Did not find a user, create and return it")
-    return new Parse.User().save()
+    console.log("Did not find a user, create and return it");
+    var newUser = new Parse.User();
+    newUser.phoneNumber = '5555551212';
+    newUser.save();
+    user = newUser;
   }
+  return user;
 });
 
 
