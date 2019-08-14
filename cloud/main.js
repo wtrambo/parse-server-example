@@ -28,6 +28,8 @@ Parse.Cloud.define("findUser2", async req => {
   var phoneNumber = req.params.phoneNumber;
   phoneNumber = phoneNumber.replace(/\D/g, '');
 
+  console.log("Incoming phone number is: " + phoneNumber)
+
   var userQuery = new Parse.Query(Parse.User);
   userQuery.equalTo('username', phoneNumber);
 
