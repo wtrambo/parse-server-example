@@ -28,8 +28,13 @@ Parse.Cloud.define("findUser2", async request => {
   const userQuery = new Parse.Query(Parse.User);
   userQuery.equalTo('username', '2062806700');
   const foundUser = await userQuery.first();
-  console.log("Found a user, user is: " + foundUser);
-  return foundUser;
+  if(foundUser) {
+    console.log("Found a user, user is: " + foundUser);
+    return foundUser;
+  } else {
+    console.log("Did not find a user, create and return it")
+    return new Parse.User()
+  }
 });
 
 
