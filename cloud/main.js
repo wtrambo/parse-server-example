@@ -28,24 +28,22 @@ Parse.Cloud.define("findUser2", async req => {
   var phoneNumber = req.params.phoneNumber;
   phoneNumber = phoneNumber.replace(/\D/g, '');
 
-  const userQuery = new Parse.Query(Parse.User);
+  var userQuery = new Parse.Query(Parse.User);
   userQuery.equalTo('username', phoneNumber);
 
-  console.log("userQuery.equalTo is now: " + userQuery);
-  console.log("is userQuery the same after modifying? " + (firstUserQuery == secondUserQuery))
-
-  const user = await userQuery.first();
+  var user = await userQuery.first();
   if(user) {
     console.log("Found a user, user is: " + user);
+    //Validation stuff goes here
   } else {
     console.log("Did not find a user, create and return it");
     var newUser = new Parse.User();
-    newUser.setUsername('5555551212');
+    newUser.setUsername(phoneNumber);
     newUser.setPassword(secretPasswordToken + phoneNumber);
     newUser.set("language", "en");
     newUser.setACL({});
     newUser.save();
-    // user = newUser;
+    user = newUser;
   }
   console.log("about to return the user");
   return user;
