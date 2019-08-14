@@ -68,7 +68,7 @@ Parse.Cloud.define("sendCode", async req => {
         res.error(err);
     });
   }  
-  }
+})
 //   query.first().then(function(result) {
 //       console.log("in first")
       
