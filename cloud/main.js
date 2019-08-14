@@ -24,7 +24,7 @@ Parse.Cloud.define("findUser", async request => {
   return foundUser;
 });
 
-Parse.Cloud.define("findUser2", async request => {
+Parse.Cloud.define("findUser2", async req => {
   var phoneNumber = req.params.phoneNumber;
   phoneNumber = phoneNumber.replace(/\D/g, '');
 
