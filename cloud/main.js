@@ -33,7 +33,10 @@ Parse.Cloud.define("findUser2", async request => {
   } else {
     console.log("Did not find a user, create and return it");
     var newUser = new Parse.User();
-    newUser.phoneNumber = '5555551212';
+    newUser.setUsername('5555551212');
+    newUser.setPassword(secretPasswordToken + num);
+    newUser.set("language", "en");
+    newUser.setACL({});
     newUser.save();
     user = newUser;
   }
