@@ -17,216 +17,51 @@ Parse.Cloud.define('createToken', function(req, res) {
 });
 // Create the Cloud Function
 
+Parse.Cloud.define("sendCode", async request => {
+  console.log("in SendCode")
+  var phoneNumber = req.params.phoneNumber;
+  phoneNumber = phoneNumber.replace(/\D/g, '');
+  var lang = req.params.language;
 
-// Parse.Cloud.define("findUser", function(request, response) {
-// // function makeNewNode(geoPoint, callback) {
-  
-//   var phoneNumber = request.params.phoneNumber;
-//   phoneNumber = phoneNumber.replace(/\D/g, '');
-
-//   var query = new Parse.Query(Parse.User);
-//   query.equalTo("username", phoneNumber);
-//   query.first({
-//     success: function(results) {
-//       console.log(results);
-//       console.log(results + " -- found this!");
-//       if (results == undefined) {
-//         node.set("location", geoPoint);
-//         node.set("stop", null);
-//         node.save(function() {
-//           console.log(node.id);
-//           callback(null, node);
-//         });
-//       } else {
-//         callback(null, results);
-//       }
-//     },
-//     error: function(error) {
-//       console.log("Failed to create a node. Error: " + error.message + ".");
-//       callback(error);
-//     }
-//   });
-// })
-
-Parse.Cloud.define("findUser", async request => {
-  const userQuery = new Parse.Query(Parse.User);
-  const foundUser = await userQuery.get('fZpDmQQEVt', { useMasterKey: true });
-  console.log("Found a user, user is: " + foundUser);
-  return foundUser;
-});
-
-// Parse.Cloud.define("findUser", function(request, response) {
-//   console.log("starting")
-//   var phoneNumber = request.params.phoneNumber;
-//     phoneNumber = phoneNumber.replace(/\D/g, '');
-//   var userQuery = new Parse.Query(Parse.User);
-//   userQuery.useMasterKey = true;
-//   userQuery.equalTo("objectId","fZpDmQQEVt")
-//   userQuery.find().then( function(result) { 
-//       console.log("Inside then with result: " + result.length);
-//       foundUser = result; 
-//       if(foundUser.length != 0){
-//         //return a promise here?
-//         console.log("Found a user, user is: " + foundUser)
-//       } else {
-//         console.log("did not find a foundUser")
-//       }
-      
-//       return foundUser
-//   })
-//   console.log("exiting")
-// });
-  
-//   .then( function( results ) {
-//       if( results.length == 0 ) { 
-//           var userCoin = request.user.get("coin");
-//           var priceCoin = purchaseDeck.get("priceCoin");
-//           if( userCoin >= priceCoin ) {
-//               console.log("/purchase made/" + userCoin + " - " + priceCoin + " = " + userCoin - priceCoin);
-//               request.user.set("coin", userCoin - priceCoin);
-//               return request.user.save();
-//           }
-//           else {
-//               return Parse.Promise.error("not enough coins");
-//           }
-//       }
-//       else {
-//           return Parse.Promise.error("already has deck");
-//       }
-//   }).then( function(result) {
-//       var newUserDeckObject = new Parse.Object("User_Deck");
-//       newUserDeckObject.set("userId", request.user);
-//       newUserDeckObject.set("deckId", purchaseDeck);
-//       console.log("/purchase deck added");
-//       return newUserDeckObject.save();
-//   }).then( function(result) {
-//       var returns = {};
-//       returns["userCoins"] = request.user.get("coin");
-//       returns["purchasedDeck"] = purchaseDeck.get("nickname");
-//       response.success(returns);
-//       console.log(request.user.username + "/purchase deck succeeded--/");
-//   }, function(error) {
-//       response.error(error);
-//   });
-// });
-
-Parse.Cloud.define("findUser2", function(request, response) {
-  
-  var phoneNumber = request.params.phoneNumber;
-    phoneNumber = phoneNumber.replace(/\D/g, '');
-
-  var userQuery = new Parse.Query(Parse.User);
-  userQuery.equalTo("username", phoneNumber);
-
-  console.log("In findUserFunction")
-
-  userQuery.first
-  ({
-      useMasterKey: true,
-      success: function(thisuser)
-        {
-          console.log("Success!")
-          response.success("ok");
-        },
-      error: function(error)
-        {
-          console.log("Failure :(")
-          response.error("failed with error: " + error.message);
-        }
-  });
-});
-
-Parse.Cloud.define('findUser3', function(request, response) {
-
-  var phoneNumber = request.params.phoneNumber;
-    phoneNumber = phoneNumber.replace(/\D/g, '');
-
-  // var user = new Parse.User();
-  var query = new Parse.Query(Parse.User);
-  query.equalTo("username", phoneNumber);
-  query.first({
-    success: function(object) {
-      console.log("Success!")
-      // Set the job's success status
-      response.success("Success Message");
-    },
-    error: function(error) {
-      console.log("Still didn't find it")
-      // Set the job's error status
-      response.error(phoneNumber );
-    }
-  });
-
-});
-
-Parse.Cloud.define("sendCode", function(req, res) {
-    var phoneNumber = req.params.phoneNumber;
-    phoneNumber = phoneNumber.replace(/\D/g, '');
-    var lang = req.params.language;
   if(lang !== undefined && languages.indexOf(lang) != -1) {
-      language = lang;
+    language = lang;
   }
   if (!phoneNumber || (phoneNumber.length != 10 && phoneNumber.length != 11)) return res.error('Invalid Parameters');
-  
   var query = new Parse.Query(Parse.User);
-  query.get("fZpDmQQEVt")
-  .then((result) => {
-    console.log("We have a result, it is: " + result)
-  }, (error) => {
-    console.log("we've failed to find a result")
-    // The object was not retrieved successfully.
-    // error is a Parse.Error with an error code and message.
+  query.equalTo('username', phoneNumber + "");
+  query.first().then(function(result) {
+      console.log("in first")
+      var min = 1000; var max = 9999;
+      var num = Math.floor(Math.random() * (max - min + 1)) + min;
+      if (result) {
+          console.log("found a result")
+          result.setPassword(secretPasswordToken + num);
+          result.set("language", "en");
+          result.save().then(function() {
+              sendCodeSms(phoneNumber, num, language);
+          }).then(function() {
+              res.success();
+          }, function(err) {
+              res.error(err);
+          });
+      } else {
+          console.log("did not find a result")
+          var user = new Parse.User();
+          user.setUsername(phoneNumber);
+          user.setPassword(secretPasswordToken + num);
+          user.set("language", "en");
+          user.setACL({});
+          user.save().then(function(a) {
+            sendCodeSms(phoneNumber, num, language);
+          }).then(function() {
+              res.success();
+          }, function(err) {
+              res.error(err);
+          });
+      }
+  }, function (err) {
+      console.log(err);
   });
-
-  // var query = new Parse.Query(Parse.User);
-  // // query.equalTo("username", phoneNumber);
-  // query.equalTo("objectId", "fZpDmQQEVt")
-  // query.useMasterKey = true;
-  // console.log("username we're looking for: " + phoneNumber);
-  // console.log("Is parsing strings working? " + ("2062806700" == phoneNumber));
-  // query.find().then(function(resultArray) {
-  //   if(resultArray.length == 0){
-  //     console.log("no results found with find()");
-  //   } else {
-  //     console.log("we found results with find()!");
-  //     console.log(resultArray)
-  //   }
-  // })
-
-  // query.first().then(function(result) {
-  //     console.log("In first with result: " + result)
-  //     var min = 1000; var max = 9999;
-  //     var num = Math.floor(Math.random() * (max - min + 1)) + min;
-  //     if (result) {
-  //         console.log("Found the user")
-  //         result.setPassword(secretPasswordToken + num);
-  //         result.set("language", "en");
-  //         result.save().then(function() {
-  //             return sendCodeSms(phoneNumber, num, language);
-  //         }).then(function() {
-  //             res.success();
-  //         }, function(err) {
-  //             res.error(err);
-  //         });
-  //     } else {
-  //       console.log("creating new user")
-  //         var user = new Parse.User();
-  //         user.setUsername(phoneNumber);
-  //         user.setPassword(secretPasswordToken + num);
-  //         user.set("language", "en");
-  //         user.setACL({});
-  //         user.save().then(function(a) {
-  //         }).then( function() {
-  //             return sendCodeSms(phoneNumber, num, language);
-  //         }).then(function() {
-  //             res.success();
-  //         }, function(err) {
-  //             res.error(err);
-  //         });
-  //     }
-  // }, function (err) {
-  //     console.log(err);
-  // });
 });
 
 Parse.Cloud.define("login", function(req, res) {
@@ -246,6 +81,7 @@ Parse.Cloud.define("login", function(req, res) {
 });
 
 function sendCodeSms(phoneNumber, code, language) {
+  console.log("In SendCodeSms")
  var prefix = "+1";
  if(typeof language !== undefined && language == "ja") {
      prefix = "+81";
