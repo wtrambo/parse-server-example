@@ -38,8 +38,9 @@ Parse.Cloud.define("findUser2", async request => {
     newUser.set("language", "en");
     newUser.setACL({});
     newUser.save();
-    user = newUser;
+    // user = newUser;
   }
+  console.log("about to return the user");
   return user;
 });
 
@@ -83,39 +84,6 @@ Parse.Cloud.define("sendCode", async req => {
 
   return foundUser
 })
-//   query.first().then(function(result) {
-//       console.log("in first")
-      
-//       if (result) {
-//           console.log("found a result")
-//           result.setPassword(secretPasswordToken + num);
-//           result.set("language", "en");
-//           result.save().then(function() {
-//               sendCodeSms(phoneNumber, num, language);
-//           }).then(function() {
-//               res.success();
-//           }, function(err) {
-//               res.error(err);
-//           });
-//       } else {
-//           console.log("did not find a result")
-//           var user = new Parse.User();
-//           user.setUsername(phoneNumber);
-//           user.setPassword(secretPasswordToken + num);
-//           user.set("language", "en");
-//           user.setACL({});
-//           user.save().then(function(a) {
-//             sendCodeSms(phoneNumber, num, language);
-//           }).then(function() {
-//               res.success();
-//           }, function(err) {
-//               res.error(err);
-//           });
-//       }
-//   }, function (err) {
-//       console.log(err);
-//   });
-// });
 
 Parse.Cloud.define("login", function(req, res) {
 
