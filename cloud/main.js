@@ -48,27 +48,34 @@ Parse.Cloud.define('createToken', function(req, res) {
 //   });
 // })
 
-Parse.Cloud.define("findUser", function(request, response) {
-  console.log("starting")
-  var phoneNumber = request.params.phoneNumber;
-    phoneNumber = phoneNumber.replace(/\D/g, '');
-  var userQuery = new Parse.Query(Parse.User);
-  userQuery.useMasterKey = true;
-  userQuery.equalTo("objectId","fZpDmQQEVt")
-  userQuery.find().then( function(result) { 
-      console.log("Inside then with result: " + result.length);
-      foundUser = result; 
-      if(foundUser.length != 0){
-        //return a promise here?
-        console.log("Found a user, user is: " + foundUser)
-      } else {
-        console.log("did not find a foundUser")
-      }
-      
-      return foundUser
-  })
-  console.log("exiting")
+Parse.Cloud.define("findUser", async request => {
+  const userQuery = new Parse.Query(Parse.User);
+  const foundUser = await userQuery.get('fZpDmQQEVt', { useMasterKey: true });
+  console.log("Found a user, user is: " + foundUser);
+  return foundUser;
 });
+
+// Parse.Cloud.define("findUser", function(request, response) {
+//   console.log("starting")
+//   var phoneNumber = request.params.phoneNumber;
+//     phoneNumber = phoneNumber.replace(/\D/g, '');
+//   var userQuery = new Parse.Query(Parse.User);
+//   userQuery.useMasterKey = true;
+//   userQuery.equalTo("objectId","fZpDmQQEVt")
+//   userQuery.find().then( function(result) { 
+//       console.log("Inside then with result: " + result.length);
+//       foundUser = result; 
+//       if(foundUser.length != 0){
+//         //return a promise here?
+//         console.log("Found a user, user is: " + foundUser)
+//       } else {
+//         console.log("did not find a foundUser")
+//       }
+      
+//       return foundUser
+//   })
+//   console.log("exiting")
+// });
   
 //   .then( function( results ) {
 //       if( results.length == 0 ) { 
