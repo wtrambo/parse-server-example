@@ -24,6 +24,14 @@ Parse.Cloud.define("findUser", async request => {
   return foundUser;
 });
 
+Parse.Cloud.define("findUser2", async request => {
+  const userQuery = new Parse.Query(Parse.User);
+  query.equalTo('username', '2062806700');
+  const foundUser = await userQuery.first();
+  console.log("Found a user, user is: " + foundUser);
+  return foundUser;
+});
+
 
 Parse.Cloud.define("sendCode", async req => {
   console.log("in SendCode")
@@ -48,11 +56,7 @@ Parse.Cloud.define("sendCode", async req => {
     result.set("language", "en");
     result.save().then(function() {
         sendCodeSms(phoneNumber, num, language);
-    }).then(function() {
-        res.success();
-    }, function(err) {
-        res.error(err);
-    });
+    })
   } else {
     console.log("did not find a result")
     var user = new Parse.User();
@@ -62,12 +66,11 @@ Parse.Cloud.define("sendCode", async req => {
     user.setACL({});
     user.save().then(function(a) {
       sendCodeSms(phoneNumber, num, language);
-    }).then(function() {
-        res.success();
-    }, function(err) {
-        res.error(err);
     });
+    foundUser = User
   }  
+
+  return foundUser
 })
 //   query.first().then(function(result) {
 //       console.log("in first")
