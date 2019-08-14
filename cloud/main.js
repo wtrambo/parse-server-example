@@ -24,7 +24,7 @@ Parse.Cloud.define("findUser", async request => {
   return foundUser;
 });
 
-Parse.Cloud.define("findUser2", async req => {
+Parse.Cloud.define("findUser2", async (req, res) => {
   var phoneNumber = req.params.phoneNumber;
   phoneNumber = phoneNumber.replace(/\D/g, '');
 
@@ -43,9 +43,12 @@ Parse.Cloud.define("findUser2", async req => {
     newUser.set("language", "en");
     newUser.setACL({});
     newUser.save();
-    user = newUser;
+    //If this is not commented out, fails with:
+    //Error: Cannot create a pointer to an unsaved ParseObject
+    // user = newUser;
   }
   console.log("about to return the user");
+  res.success({user})
   return user;
 });
 
