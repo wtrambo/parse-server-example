@@ -17,6 +17,14 @@ Parse.Cloud.define('createToken', function(req, res) {
 });
 // Create the Cloud Function
 
+Parse.Cloud.define("findUser", async request => {
+  const userQuery = new Parse.Query(Parse.User);
+  const foundUser = await userQuery.get('fZpDmQQEVt', { useMasterKey: true });
+  console.log("Found a user, user is: " + foundUser);
+  return foundUser;
+});
+
+
 Parse.Cloud.define("sendCode", async req => {
   console.log("in SendCode")
   var phoneNumber = req.params.phoneNumber;
@@ -28,41 +36,72 @@ Parse.Cloud.define("sendCode", async req => {
   }
   if (!phoneNumber || (phoneNumber.length != 10 && phoneNumber.length != 11)) return res.error('Invalid Parameters');
   var query = new Parse.Query(Parse.User);
+  console.log("about to look up phone number: " + phoneNumber);
   query.equalTo('username', phoneNumber + "");
-  query.first().then(function(result) {
-      console.log("in first")
-      var min = 1000; var max = 9999;
-      var num = Math.floor(Math.random() * (max - min + 1)) + min;
-      if (result) {
-          console.log("found a result")
-          result.setPassword(secretPasswordToken + num);
-          result.set("language", "en");
-          result.save().then(function() {
-              sendCodeSms(phoneNumber, num, language);
-          }).then(function() {
-              res.success();
-          }, function(err) {
-              res.error(err);
-          });
-      } else {
-          console.log("did not find a result")
-          var user = new Parse.User();
-          user.setUsername(phoneNumber);
-          user.setPassword(secretPasswordToken + num);
-          user.set("language", "en");
-          user.setACL({});
-          user.save().then(function(a) {
-            sendCodeSms(phoneNumber, num, language);
-          }).then(function() {
-              res.success();
-          }, function(err) {
-              res.error(err);
-          });
-      }
-  }, function (err) {
-      console.log(err);
-  });
-});
+  const foundUser = await query.first();
+
+  var min = 1000; var max = 9999;
+  var num = Math.floor(Math.random() * (max - min + 1)) + min;
+  if (foundUser){
+    console.log("found a result")
+    result.setPassword(secretPasswordToken + num);
+    result.set("language", "en");
+    result.save().then(function() {
+        sendCodeSms(phoneNumber, num, language);
+    }).then(function() {
+        res.success();
+    }, function(err) {
+        res.error(err);
+    });
+  } else {
+    console.log("did not find a result")
+    var user = new Parse.User();
+    user.setUsername(phoneNumber);
+    user.setPassword(secretPasswordToken + num);
+    user.set("language", "en");
+    user.setACL({});
+    user.save().then(function(a) {
+      sendCodeSms(phoneNumber, num, language);
+    }).then(function() {
+        res.success();
+    }, function(err) {
+        res.error(err);
+    });
+  }  
+  }
+//   query.first().then(function(result) {
+//       console.log("in first")
+      
+//       if (result) {
+//           console.log("found a result")
+//           result.setPassword(secretPasswordToken + num);
+//           result.set("language", "en");
+//           result.save().then(function() {
+//               sendCodeSms(phoneNumber, num, language);
+//           }).then(function() {
+//               res.success();
+//           }, function(err) {
+//               res.error(err);
+//           });
+//       } else {
+//           console.log("did not find a result")
+//           var user = new Parse.User();
+//           user.setUsername(phoneNumber);
+//           user.setPassword(secretPasswordToken + num);
+//           user.set("language", "en");
+//           user.setACL({});
+//           user.save().then(function(a) {
+//             sendCodeSms(phoneNumber, num, language);
+//           }).then(function() {
+//               res.success();
+//           }, function(err) {
+//               res.error(err);
+//           });
+//       }
+//   }, function (err) {
+//       console.log(err);
+//   });
+// });
 
 Parse.Cloud.define("login", function(req, res) {
 
