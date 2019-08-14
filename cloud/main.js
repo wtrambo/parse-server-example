@@ -17,7 +17,7 @@ Parse.Cloud.define('createToken', function(req, res) {
 });
 // Create the Cloud Function
 
-Parse.Cloud.define("sendCode", async request => {
+Parse.Cloud.define("sendCode", async req => {
   console.log("in SendCode")
   var phoneNumber = req.params.phoneNumber;
   phoneNumber = phoneNumber.replace(/\D/g, '');
