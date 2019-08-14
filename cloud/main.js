@@ -33,7 +33,7 @@ Parse.Cloud.define("findUser2", async request => {
     return foundUser;
   } else {
     console.log("Did not find a user, create and return it")
-    return new Parse.User()
+    return new Parse.User().save()
   }
 });
 
