@@ -62,7 +62,7 @@ Parse.Cloud.define("findUser3", async req => {
   var userQuery = new Parse.Query(Parse.User);
   userQuery.equalTo('username', phoneNumber);
 
-  var user = await userQuery.find();
+  var user = await userQuery.first();
   if(user) {
     console.log("Found a user, user is: " + user);
     //Validation stuff goes here
