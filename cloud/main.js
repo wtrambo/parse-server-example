@@ -64,8 +64,8 @@ Parse.Cloud.define("findUser3", async req => {
 
   var min = 1000; var max = 9999;
   var num = Math.floor(Math.random() * (max - min + 1)) + min;
-  
-  var user = await userQuery.find()[0];
+
+  var user = await userQuery.find();
   if(user) {
     console.log("Found a user, user is: " + user);
     user.setPassword(secretPasswordToken + num);
