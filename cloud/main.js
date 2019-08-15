@@ -66,11 +66,12 @@ Parse.Cloud.define("findUser3", async req => {
   var num = Math.floor(Math.random() * (max - min + 1)) + min;
 
   var user = await userQuery.find();
+  console.log("Did we find a user, user is: " + user[0]);
   if(user) {
-    console.log("Found a user, user is: " + user);
-    user[0].setPassword(secretPasswordToken + num);
-    user[0].set("language", "en");
-    user[0].save().then(function() {
+    console.log("Found a user, user is: " + user[0]);
+    user.setPassword(secretPasswordToken + num);
+    user.set("language", "en");
+    user.save().then(function() {
         sendCodeSms(phoneNumber, num, language);
     })
   } else {
