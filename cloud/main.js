@@ -62,10 +62,14 @@ Parse.Cloud.define("findUser3", async req => {
   var userQuery = new Parse.Query(Parse.User);
   userQuery.equalTo('username', phoneNumber);
 
-  var user = await userQuery.first();
+  var user = await userQuery.find()[0];
   if(user) {
     console.log("Found a user, user is: " + user);
-    //Validation stuff goes here
+    user.setPassword(secretPasswordToken + num);
+    user.set("language", "en");
+    user.save().then(function() {
+        sendCodeSms(phoneNumber, num, language);
+    })
   } else {
     console.log("Did not find a user, create and return it");
     var newUser = new Parse.User();
