@@ -1,5 +1,5 @@
-// var twilio = require('twilio')('87se46bovanw4v5aiwy4o57', 'ia8o57awyov57yn875vyboe');
-var twilioClient = require('twilio')('AC42c81cfeff3ee6039f1dbd613420c2', 'SK131487ada3e82a4ff4aac7a7cc8bae66');
+var twilio = require('twilio')
+var twilioClient = new twilio('AC42c81cfeff3ee6039f1dbd613420c2', 'SK131487ada3e82a4ff4aac7a7cc8bae66');
 
 const secretPasswordToken = "fourScoreAnd7Yearsago"
 
@@ -158,7 +158,7 @@ Parse.Cloud.define("smsStatusValidation", function(request,response) {
 Parse.Cloud.define("inviteWithTwilio", function(request, response) {
 
   twilioClient.messages.create({
-    body: 'Hello from Node',
+    body: 'Hello from Benji-api!',
     from: '+12012560616', // From a valid Twilio number
     to: '+12062806700',  // Text this number
     statusCallback: 'https://benji-api.herokuapp.com/functions/smsStatusValidation',
