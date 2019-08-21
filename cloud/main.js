@@ -152,7 +152,7 @@ Parse.Cloud.define("login", function(req, res) {
 
 Parse.Cloud.define("inviteWithTwilio", function(request, response) {
 
-  client.messages.create({
+  twilioClient.messages.create({
     body: 'Hello from Node',
     to: '+12062806700',  // Text this number
     from: '+12345678901' // From a valid Twilio number
