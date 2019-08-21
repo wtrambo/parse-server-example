@@ -163,10 +163,13 @@ function sendCodeSms(phoneNumber, code, language) {
      from: twilioPhoneNumber.replace(/\D/g, ''),
      body: 'Your login code for Benji is ' + code
  }, function(err, responseData) {
+     console.log("In Twilio completion")
      if (err) {
+        console.log("We have an error")
          console.log(err);
          thePromise.reject(err.message);
      } else {
+        console.log("No error detected, we should do the promise")
         thePromise.resolve();
      }
  });
