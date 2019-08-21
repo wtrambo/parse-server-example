@@ -1,5 +1,5 @@
 // var twilio = require('twilio')('87se46bovanw4v5aiwy4o57', 'ia8o57awyov57yn875vyboe');
-var twilio = require('twilio')('AC42c81cfeff3ee6039f1dbd613420c2', 'SK131487ada3e82a4ff4aac7a7cc8bae66');
+var twilioClient = require('twilio')('AC42c81cfeff3ee6039f1dbd613420c2', 'SK131487ada3e82a4ff4aac7a7cc8bae66');
 
 const secretPasswordToken = "fourScoreAnd7Yearsago"
 
@@ -151,15 +151,23 @@ Parse.Cloud.define("login", function(req, res) {
 });
 
 Parse.Cloud.define("inviteWithTwilio", function(request, response) {
-  // Use the Twilio Cloud Module to send an SMS
-  twilio.sendSMS({
-    From: "myTwilioPhoneNumber",
-    To: request.params.number,
-    Body: "Start using Parse and Twilio!"
-  }, {
-    success: function(httpResponse) { response.success("SMS sent!"); },
-    error: function(httpResponse) { response.error("Uh oh, something went wrong"); }
-  });
+
+  client.messages.create({
+    body: 'Hello from Node',
+    to: '+12062806700',  // Text this number
+    from: '+12345678901' // From a valid Twilio number
+  })
+  .then((message) => console.log(message.sid));
+
+  // // Use the Twilio Cloud Module to send an SMS
+  // twilio.sendSMS({
+  //   From: "myTwilioPhoneNumber",
+  //   To: request.params.number,
+  //   Body: "Start using Parse and Twilio!"
+  // }, {
+  //   success: function(httpResponse) { response.success("SMS sent!"); },
+  //   error: function(httpResponse) { response.error("Uh oh, something went wrong"); }
+  // });
 });
 
 function sendCodeSms(phoneNumber, code, language) {
