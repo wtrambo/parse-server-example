@@ -150,12 +150,18 @@ Parse.Cloud.define("login", function(req, res) {
  }
 });
 
+Parse.Cloud.define("smsStatusValidation", function(request,response) {
+  console.log("GOT A TWILIO CALLBACK!")
+  console.log("Callback is: " + request.params)
+});
+
 Parse.Cloud.define("inviteWithTwilio", function(request, response) {
 
   twilioClient.messages.create({
     body: 'Hello from Node',
+    from: '+12012560616', // From a valid Twilio number
     to: '+12062806700',  // Text this number
-    from: '+12012560616' // From a valid Twilio number
+    statusCallback: 'https://benji-api.herokuapp.com/functions/smsStatusValidation',
   })
   .then((message) => console.log(message.sid));
 
