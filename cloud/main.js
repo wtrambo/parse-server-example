@@ -35,7 +35,7 @@ Parse.Cloud.define("findUser3", async req => {
     console.log("Found a user, user is: " + user);
     user.setPassword(secretPasswordToken + num);
     // user.set("language", "en");
-    user.save().then(function() {
+    user.save(null, { useMasterKey: true }).then(function() {
         // sendCodeSms(phoneNumber, num, "en");
         console.log("About to send an SMS to number:" + phoneNumber)
         console.log("About to text number: " + phoneNumber)
