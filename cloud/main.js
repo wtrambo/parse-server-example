@@ -72,11 +72,11 @@ Parse.Cloud.define("findUser3", async req => {
     console.log("About to send a SMS")
     sendCodeSms(phoneNumber, num, "en");
     console.log("Sent the SMS")
-    user.setPassword(secretPasswordToken + num);
-    user.set("language", "en");
-    user.save().then(function() {
-        sendCodeSms(phoneNumber, num, "en");
-    })
+    // user.setPassword(secretPasswordToken + num);
+    // user.set("language", "en");
+    // user.save().then(function() {
+    //     sendCodeSms(phoneNumber, num, "en");
+    // })
   } else {
     console.log("Did not find a user, create and return it");
     var newUser = new Parse.User();
@@ -157,7 +157,7 @@ function sendCodeSms(phoneNumber, code, language) {
      prefix = "+81";
  }
 
- var promise = new Parse.Promise();
+ var thePromise = new Parse.Promise();
  twilio.sendSms({
      to: prefix + phoneNumber.replace(/\D/g, ''),
      from: twilioPhoneNumber.replace(/\D/g, ''),
@@ -165,12 +165,12 @@ function sendCodeSms(phoneNumber, code, language) {
  }, function(err, responseData) {
      if (err) {
          console.log(err);
-         promise.reject(err.message);
+         thePromise.reject(err.message);
      } else {
-         promise.resolve();
+        thePromise.resolve();
      }
  });
- return promise;
+ return thePromise;
 }
 
 
