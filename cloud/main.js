@@ -1,5 +1,4 @@
 var twilio = require('twilio')
-//var twilioClient = new twilio('AC42c81cfeff3ee6039f1dbd613420c267', 'SK131487ada3e82a4ff4aac7a7cc8bae66');
 var twilioClient = new twilio('AC42c81cfeff3ee6039f1dbd613420c267', '04ea44eb31ef8c7456453b7ced5a3fb6');
 
 const secretPasswordToken = "fourScoreAnd7Yearsago"
@@ -18,42 +17,6 @@ Parse.Cloud.define('createToken', function(req, res) {
 });
 // Create the Cloud Function
 
-// Parse.Cloud.define("findUser", async request => {
-//   const userQuery = new Parse.Query(Parse.User);
-//   const foundUser = await userQuery.get('fZpDmQQEVt', { useMasterKey: true });
-//   console.log("Found a user, user is: " + foundUser);
-//   return foundUser;
-// });
-
-// Parse.Cloud.define("findUser2", async req => {
-//   var phoneNumber = req.params.phoneNumber;
-//   phoneNumber = phoneNumber.replace(/\D/g, '');
-
-//   console.log("Incoming phone number is: " + phoneNumber)
-
-//   var userQuery = new Parse.Query(Parse.User);
-//   userQuery.equalTo('username', phoneNumber);
-
-//   var user = await userQuery.first();
-//   if(user) {
-//     console.log("Found a user, user is: " + user);
-//     //Validation stuff goes here
-//   } else {
-//     console.log("Did not find a user, create and return it");
-//     var newUser = new Parse.User();
-//     newUser.setUsername(phoneNumber);
-//     newUser.setPassword(secretPasswordToken + phoneNumber);
-//     newUser.set("language", "en");
-//     newUser.setACL({});
-//     newUser.save();
-//     //If this is not commented out, fails with:
-//     //Error: Cannot create a pointer to an unsaved ParseObject
-//     //user = newUser;
-//   }
-//   console.log("about to return the user");
-//   return user;
-// });
-
 Parse.Cloud.define("findUser3", async req => {
   var phoneNumber = req.params.phoneNumber;
   phoneNumber = phoneNumber.replace(/\D/g, '');
@@ -70,19 +33,19 @@ Parse.Cloud.define("findUser3", async req => {
   console.log("Did we find a user, user is: " + user);
   if(user) {
     console.log("Found a user, user is: " + user);
-    console.log("About to send a SMS")
-    console.log("About to text number: " + phoneNumber)
-    twilioClient.messages.create({
-      body: 'Hello from Benji-api!',
-      from: '+12012560616', // From a valid Twilio number
-      to: phoneNumber  // Text this number
+    user.setPassword(secretPasswordToken + num);
+    user.set("language", "en");
+    user.save().then(function() {
+        // sendCodeSms(phoneNumber, num, "en");
+        console.log("About to send a SMS")
+        console.log("About to text number: " + phoneNumber)
+        twilioClient.messages.create({
+          body: 'Hello from Benji-api!',
+          from: '+12012560616', // From a valid Twilio number
+          to: phoneNumber  // Text this number
+        })
+        console.log("Sent the SMS")
     })
-    console.log("Sent the SMS")
-    // user.setPassword(secretPasswordToken + num);
-    // user.set("language", "en");
-    // user.save().then(function() {
-    //     sendCodeSms(phoneNumber, num, "en");
-    // })
   } else {
     console.log("Did not find a user, create and return it");
     var newUser = new Parse.User();
@@ -91,6 +54,15 @@ Parse.Cloud.define("findUser3", async req => {
     newUser.set("language", "en");
     newUser.setACL({});
     await newUser.save(); //This is the line you need to change
+
+    console.log("About to send a SMS")
+    console.log("About to text number: " + phoneNumber)
+    twilioClient.messages.create({
+      body: 'Hello from Benji-api!',
+      from: '+12012560616', // From a valid Twilio number
+      to: phoneNumber  // Text this number
+    })
+    console.log("Sent the SMS")
     //If this is not commented out, fails with:
     //Error: Cannot create a pointer to an unsaved ParseObject
     user = newUser;
@@ -124,7 +96,7 @@ Parse.Cloud.define("sendCode", async req => {
     result.save().then(function() {
       console.log("About to text number: " + phoneNumber)
       twilioClient.messages.create({
-        body: 'Hello from Benji-api!',
+        body: 'Hello from Benji-api! Your login code is: ' + num,
         from: '+12012560616', // From a valid Twilio number
         to: phoneNumber  // Text this number
       })
@@ -139,7 +111,13 @@ Parse.Cloud.define("sendCode", async req => {
     user.set("language", "en");
     user.setACL({});
     user.save().then(function(a) {
-      sendCodeSms(phoneNumber, num, language);
+      // sendCodeSms(phoneNumber, num, language);
+      console.log("About to text number: " + phoneNumber)
+      twilioClient.messages.create({
+        body: 'Hello from Benji-api! Your login code is: ' + num,
+        from: '+12012560616', // From a valid Twilio number
+        to: phoneNumber  // Text this number
+      })
     });
     foundUser = User
   }  
