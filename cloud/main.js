@@ -150,6 +150,18 @@ Parse.Cloud.define("login", function(req, res) {
  }
 });
 
+Parse.Cloud.define("inviteWithTwilio", function(request, response) {
+  // Use the Twilio Cloud Module to send an SMS
+  twilio.sendSMS({
+    From: "myTwilioPhoneNumber",
+    To: request.params.number,
+    Body: "Start using Parse and Twilio!"
+  }, {
+    success: function(httpResponse) { response.success("SMS sent!"); },
+    error: function(httpResponse) { response.error("Uh oh, something went wrong"); }
+  });
+});
+
 function sendCodeSms(phoneNumber, code, language) {
   console.log("In SendCodeSms")
  var prefix = "+1";
