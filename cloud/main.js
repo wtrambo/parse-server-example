@@ -18,41 +18,41 @@ Parse.Cloud.define('createToken', function(req, res) {
 });
 // Create the Cloud Function
 
-Parse.Cloud.define("findUser", async request => {
-  const userQuery = new Parse.Query(Parse.User);
-  const foundUser = await userQuery.get('fZpDmQQEVt', { useMasterKey: true });
-  console.log("Found a user, user is: " + foundUser);
-  return foundUser;
-});
+// Parse.Cloud.define("findUser", async request => {
+//   const userQuery = new Parse.Query(Parse.User);
+//   const foundUser = await userQuery.get('fZpDmQQEVt', { useMasterKey: true });
+//   console.log("Found a user, user is: " + foundUser);
+//   return foundUser;
+// });
 
-Parse.Cloud.define("findUser2", async req => {
-  var phoneNumber = req.params.phoneNumber;
-  phoneNumber = phoneNumber.replace(/\D/g, '');
+// Parse.Cloud.define("findUser2", async req => {
+//   var phoneNumber = req.params.phoneNumber;
+//   phoneNumber = phoneNumber.replace(/\D/g, '');
 
-  console.log("Incoming phone number is: " + phoneNumber)
+//   console.log("Incoming phone number is: " + phoneNumber)
 
-  var userQuery = new Parse.Query(Parse.User);
-  userQuery.equalTo('username', phoneNumber);
+//   var userQuery = new Parse.Query(Parse.User);
+//   userQuery.equalTo('username', phoneNumber);
 
-  var user = await userQuery.first();
-  if(user) {
-    console.log("Found a user, user is: " + user);
-    //Validation stuff goes here
-  } else {
-    console.log("Did not find a user, create and return it");
-    var newUser = new Parse.User();
-    newUser.setUsername(phoneNumber);
-    newUser.setPassword(secretPasswordToken + phoneNumber);
-    newUser.set("language", "en");
-    newUser.setACL({});
-    newUser.save();
-    //If this is not commented out, fails with:
-    //Error: Cannot create a pointer to an unsaved ParseObject
-    //user = newUser;
-  }
-  console.log("about to return the user");
-  return user;
-});
+//   var user = await userQuery.first();
+//   if(user) {
+//     console.log("Found a user, user is: " + user);
+//     //Validation stuff goes here
+//   } else {
+//     console.log("Did not find a user, create and return it");
+//     var newUser = new Parse.User();
+//     newUser.setUsername(phoneNumber);
+//     newUser.setPassword(secretPasswordToken + phoneNumber);
+//     newUser.set("language", "en");
+//     newUser.setACL({});
+//     newUser.save();
+//     //If this is not commented out, fails with:
+//     //Error: Cannot create a pointer to an unsaved ParseObject
+//     //user = newUser;
+//   }
+//   console.log("about to return the user");
+//   return user;
+// });
 
 Parse.Cloud.define("findUser3", async req => {
   var phoneNumber = req.params.phoneNumber;
@@ -71,7 +71,12 @@ Parse.Cloud.define("findUser3", async req => {
   if(user) {
     console.log("Found a user, user is: " + user);
     console.log("About to send a SMS")
-    sendCodeSms(phoneNumber, num, "en");
+    console.log("About to text number: " + phoneNumber)
+    twilioClient.messages.create({
+      body: 'Hello from Benji-api!',
+      from: '+12012560616', // From a valid Twilio number
+      to: phoneNumber  // Text this number
+    })
     console.log("Sent the SMS")
     // user.setPassword(secretPasswordToken + num);
     // user.set("language", "en");
@@ -117,7 +122,14 @@ Parse.Cloud.define("sendCode", async req => {
     result.setPassword(secretPasswordToken + num);
     result.set("language", "en");
     result.save().then(function() {
-        sendCodeSms(phoneNumber, num, language);
+      console.log("About to text number: " + phoneNumber)
+      twilioClient.messages.create({
+        body: 'Hello from Benji-api!',
+        from: '+12012560616', // From a valid Twilio number
+        to: phoneNumber  // Text this number
+      })
+      // .then((message) => console.log(message.sid));
+      //   sendCodeSms(phoneNumber, num, language);
     })
   } else {
     console.log("did not find a result")
