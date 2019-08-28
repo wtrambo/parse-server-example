@@ -58,7 +58,8 @@ Parse.Cloud.define("sendCode", async (req, res) => {
     user = newUser;
   }
   console.log("about to return the user");
-  return user;
+  res.success(user)
+  // return user;
 });
 
 
