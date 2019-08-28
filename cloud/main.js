@@ -47,7 +47,7 @@ Parse.Cloud.define("sendCode", async (req, res) => {
     newUser.setPassword(secretPasswordToken + phoneNumber);
     newUser.set("language", "en");
     newUser.setACL({});
-    await newUser.save(); 
+    await newUser.signUp(); 
 
     twilioClient.messages.create({
       body: 'Your phone number was just used on the Benji App. Your auth code is: ' + num,
@@ -57,11 +57,29 @@ Parse.Cloud.define("sendCode", async (req, res) => {
     console.log("Sent the new user SMS")
     user = newUser;
   }
-  console.log("about to return the user");
-  console.log("req currently is: " + req);
-  console.log("res currently is: " + res);
-  res.success(user)
-  return user;
+  console.log("about to return success with num: " + num);
+  return true;
+});
+
+Parse.Cloud.define("validateCode", async req => {
+  var phoneNumber = req.params.phoneNumber;
+  phoneNumber = phoneNumber.replace(/\D/g, '');
+
+  var authCode = req.params.authCode;
+  var password = secretPasswordToken + authCode
+
+  var userQuery = new Parse.Query(Parse.User);
+  userQuery.equalTo('username', phoneNumber);
+
+  const user = await Parse.User.logIn(phoneNumber, password);
+  
+  if(user) {
+    console.log("User found!");
+    return user
+  } else {
+    console.log("User NOT found :(");
+    res.error("User not found");  
+  }
 });
 
 
