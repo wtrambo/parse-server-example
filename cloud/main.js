@@ -58,7 +58,7 @@ Parse.Cloud.define("sendCode", async (req, res) => {
     user = newUser;
   }
   console.log("about to return success with num: " + num);
-  return true;
+  return num;
 });
 
 Parse.Cloud.define("validateCode", async req => {
@@ -75,7 +75,7 @@ Parse.Cloud.define("validateCode", async req => {
   
   if(user) {
     console.log("User found!");
-    return user
+    return user.getSessionToken()
   } else {
     console.log("User NOT found :(");
     res.error("User not found");  
