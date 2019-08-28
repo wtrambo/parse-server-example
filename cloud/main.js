@@ -58,7 +58,8 @@ Parse.Cloud.define("sendCode", async (req, res) => {
     user = newUser;
   }
   console.log("about to return the user");
-  console.log("req currently is: " + req)
+  console.log("req currently is: " + req);
+  console.log("res currently is: " + res);
   res.success(user)
   return user;
 });
